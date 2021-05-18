@@ -1,37 +1,72 @@
 import streamlit as st
-
-from models import summarize_with_lsa, summarize_with_tf_idf
+from text_prepro import *
+from text_models import summarize_with_lsa, summarize_with_tf_idf
+from summarize import TextSummarizer
 
 st.title('Text Summarization Demo')
-st.markdown('Using BART and T5 transformer model')
+
+text = st.text_area('Provide the text to summarize:')
+
+prepro_choice = ['Convert to lowercase', 'Stemming', 'Lemmatization']
+prepro_pipe = st.multiselect('Select text preprocessing techniques:', prepro_choice)
+
+lowercase = False
+stem = False
+lemm = ''
+
+if 'Convert to lowercase' in prepro_pipe:
+    lowercase = True
+if 'Stemming' in prepro_pipe:
+    stem = True
+if 'Lemmatization' in prepro_pipe:
+    lemm = 'spacy'
+
+
+def prepro_review(input_text, max_rows=5):
+    preview_sent = text2sentences(input_text)
+    n = min(max_rows, len(preview_sent))
+    preview_text = ' '.join(preview_sent[:n])
+    prepro_output = normalize_text(preview_text, lowercase=lowercase, stemming=stem, lemmatize_method=lemm)
+    st.markdown('<br>'.join(prepro_output), unsafe_allow_html=True)
+
+
+if st.button('Preview preprocessing'):
+    prepro_review(text)
 
 model = st.selectbox('Select the model', ('LSA', 'TF-idf'))
-if model == 'LSA':
-    _num_sentences = 5
-
-    col1 = st.beta_columns(1)
-    _num_sentences = col1[0].number_input("_num_sentences", value=_num_sentences)
-elif model == 'TF-idf':
-    _num_sentences = 5
-
-    col1 = st.beta_columns(1)
-    _num_sentences = col1[0].number_input("_num_sentences", value=_num_sentences)
 
 
-text = st.text_area('Text Input')
-
-
-def run_model(input_text, _num_sentences):
-    if model == 'LSA':
-        output = summarize_with_lsa(str(input_text), _num_sentences)
-        st.write('Summary')
-        st.success(output)
-
-    if model == 'TF-idf':
-        output = summarize_with_tf_idf(str(input_text))
-        st.write('Summary')
-        st.success(output)
+def run_summarizer(input_text):
+    ts = TextSummarizer(input_text)
+    model_output = ts.summarize(lowercase=lowercase, stemming=stem, lemmatize_method=lemm)
+    st.markdown('<br>'.join(model_output), unsafe_allow_html=True)
 
 
 if st.button('Submit'):
-    run_model(text, _num_sentences)
+    run_summarizer(text)
+
+# # if model == 'LSA':
+# #     _num_sentences = 5
+# #
+# #     col1 = st.beta_columns(1)
+# #     _num_sentences = col1[0].number_input("_num_sentences", value=_num_sentences)
+# # elif model == 'TF-idf':
+# #     _num_sentences = 5
+# #
+# #     col1 = st.beta_columns(1)
+# #     _num_sentences = col1[0].number_input("_num_sentences", value=_num_sentences)
+# def run_model(input_text, _num_sentences=5):
+
+    # if model == 'LSA':
+    #     output = summarize_with_lsa(str(input_text), _num_sentences)
+    #     st.write('Summary')
+    #     st.success(output)
+    #
+    # if model == 'TF-idf':
+    #     output = summarize_with_tf_idf(str(input_text))
+    #     st.write('Summary')
+    #     st.success(output)
+
+
+# if st.button('Submit'):
+#     run_model(text)

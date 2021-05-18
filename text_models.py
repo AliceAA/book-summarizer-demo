@@ -1,30 +1,12 @@
 import itertools
 from collections import namedtuple
 from operator import attrgetter
-import re
-
-import nltk
-from utils import *
+from text_prepro import *
 import numpy as np
 from numpy.lib import math
 from numpy.linalg import svd as singular_value_decomposition
 
 SentenceInfo = namedtuple("SentenceInfo", ("sentence", "order_in_document", "rank",))
-nltk.download('punkt')
-nltk.download('stopwords')
-
-
-def view_important_sent_in_text(book_sent, top_sent_inds):
-    top_sent_inds = set(sorted(top_sent_inds))
-    final_text = ''
-    for i, sent in enumerate(split_to_sentences(book_sent)):
-        if i in top_sent_inds:
-            # final_text += f'<font style = "color: red"> {sent} </font>'
-            final_text += sent
-        # else:
-        # final_text += f'<font style = "color: black"> {sent} </font>'
-
-    return final_text
 
 
 def summarize_with_lsa(text, n=5):
@@ -82,13 +64,11 @@ def compute_term_frequency(matrix, smooth=0.4):
 def compute_ranks(sigma, v):
     dimensions = len(sigma)
     powered_sigma = tuple(s ** 2 if i < dimensions else 0.0 for i, s in enumerate(sigma))
-
     ranks = []
     # iterate over columns of matrix (rows of transposed matrix)
     for column_vector in v.T:
         rank = sum(s * v ** 2 for s, v in zip(powered_sigma, column_vector))
         ranks.append(math.sqrt(rank))
-
     return ranks
 
 
@@ -97,11 +77,8 @@ def get_top_sentences(sentences, number, rank):
                      enumerate(sentences))
 
     info = sorted(sentence_info, key=attrgetter("rank"), reverse=True)
-
     info = info[:int(number)]
-
     info = sorted(info, key=attrgetter("order_in_document"))
-
     return info
 
 
@@ -109,43 +86,11 @@ def group_sentences(summary):
     return str([str(sentence) for sentence in summary])
 
 
-def split_to_sentences(text: str) -> list:
-    text = str(text.replace('\n', ''))
-    text = re.sub('([.,!?()])', r'\1 ', text)
-    text = re.sub('\s{2,}', ' ', text)
-    text_sent = nltk.sent_tokenize(text)
-    return text_sent
-
-
-def normalize(sentence, stopwords=True, stemming=False, lemmatizer=None):
-    words = nltk.word_tokenize(sentence)
-    words = remove_non_ascii(words)
-    words = remove_punctuation(words)
-    words = to_lowercase(words)
-    words = split_words(words)
-    if stopwords:
-        words = remove_stopwords(words)
-    if lemmatizer:
-        if lemmatizer == 'nltk':
-            words = lemmatize_nltk(words)
-        elif lemmatizer == 'spacy':
-            words = lemmatize_spacy(words)
-        elif lemmatizer == 'textblob':
-            words = lemmatize_textblob(words)
-        else:
-            raise Exception(f'Lemmatizer {lemmatizer} is not defined')
-    if stemming:
-        words = stem(words)
-    return words
-
-
 def lsa_preprocess(text):
-    sentences = split_to_sentences(text)
-    word_sentences = [normalize(sentence, stopwords=True, stemming=True, lemmatizer=None) for sentence in sentences]
+    sentences = text2sentences(text)
+    word_sentences = [normalize_sent(sentence, stopwords=True, stemming=True) for sentence in sentences]
     unique_words = frozenset(itertools.chain(*word_sentences))
-
     unique_words_dic = dict((w, i) for i, w in enumerate(unique_words))
-
     return (sentences, word_sentences, unique_words_dic)
 
 
