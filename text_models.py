@@ -5,6 +5,10 @@ from text_prepro import *
 import numpy as np
 from numpy.lib import math
 from numpy.linalg import svd as singular_value_decomposition
+from sumy.parsers.plaintext import PlaintextParser
+from sumy.nlp.tokenizers import Tokenizer
+from sumy.summarizers.text_rank import TextRankSummarizer
+from sumy.summarizers.reduction import ReductionSummarizer
 
 SentenceInfo = namedtuple("SentenceInfo", ("sentence", "order_in_document", "rank",))
 
@@ -105,3 +109,22 @@ def lsa(text, num_sentences=10):
     ranks = iter(compute_ranks(sigma, v))
 
     return get_top_sentences(sentences, num_sentences, lambda s: next(ranks))
+
+
+def text_rank_summarizer(text: str, summary_n_sent: int):
+    parser = PlaintextParser.from_string(text, Tokenizer("english"))
+    init_sents = text2sentences(parser._text)
+    summarizer = TextRankSummarizer()
+    summary = summarizer(parser.document, summary_n_sent)
+    summary_ind = []
+    for summary_sent in summary:
+        summary_ind.append(init_sents.index(str(summary_sent)))
+    return summary_ind
+
+
+def apply_text_model(text: str, summary_n_sent: int, model_name=''):
+    if model_name == 'text_rank':
+        summary_ind = text_rank_summarizer(text, summary_n_sent)
+    else:
+        summary_ind = [0]
+    return summary_ind
