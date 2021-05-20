@@ -8,15 +8,12 @@ trigger:
 
 pool:
   vmImage: ubuntu-latest
-strategy:
-  matrix:
-    Python37:
-      python.version: '3.7'
+
 
 steps:
 - task: UsePythonVersion@0
   inputs:
-    versionSpec: '$(python.version)'
+    versionSpec: '3.7'
   displayName: 'Use Python $(python.version)'
 
 - script: |
@@ -25,6 +22,6 @@ steps:
   displayName: 'Install dependencies'
 
 - script: |
-    pip install pytest pytest-azurepipelines
-    pytest
-  displayName: 'pytest'
+    python -m pip install flake8
+    flake8 .
+  displayName: 'Run lint tests'
