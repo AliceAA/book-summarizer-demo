@@ -5,21 +5,41 @@ This repo contains implementation of the book summarization approaches prepared 
 - Vladyslava Potapova
 - Yura Budzyn
 ## Technical summary
-Implemented solution contains two text summarization approaches:
+Implemented solution contains the following text summarization approaches:
 - TextRank
-- LCA
+- LexRank
+- Luhn Summarizer
+- Latent Semantic Analysis (LSA)
+- KLSum 
 
-Additionally user can chose form three preprocessing options:
+Additionally, user can choose form three preprocessing options:
 - converting text to lower case
-- lemmatezation
+- lemmatization
 - stemming
 
 All of the above options are available on the web-version of the demo.
 Web version was implemented using Streamlit framework
 ## Deployment
-To deploy web version of demo follow the steps:
-1) Clone the repo
-2) Install all the requirements described in the requirements.txt document
-3) In the terminal use command <b> streamlit run \<path to main.py of the repo\> </b>
+In order to use this repository locally, follow the next steps:
 
-After that demo will be evailable in your default browser.
+1. Clone the repo and setup virtual environment from the project root folder
+    ```buildoutcfg
+    # create "book_summarizer" environment
+    python3 -m venv .virtualenvs/book_summarizer
+    
+    # activate environment
+    source .virtualenvs/experiments/bin/activate
+    ```
+
+2.  Install dependencies 
+    ```buildoutcfg
+    # load required packages
+    pip install -r requirements.txt
+    ```
+    
+3. To run the demo use the following command In the terminal 
+    ```buildoutcfg
+    streamlit run src/main.py 
+    ```
+   
+After that demo will be available in your default browser.
