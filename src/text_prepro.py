@@ -127,10 +127,10 @@ def normalize_sent(sentence: str, lowercase: bool = True, stemming: bool = False
     return words
 
 
-def normalize_text(text: str, lowercase: bool = True, stemming: bool = False, lemmatize_method: str = '') -> list:
+def normalize_text(text: str, lowercase: bool = True, stemming: bool = False, lemmatize_method: str = '') -> str:
     text_sent = text2sentences(text)
     text_sent_norm = []
     for sent in text_sent:
         sent_norm = normalize_sent(sent, lowercase=lowercase, stemming=stemming, lemmatize_method=lemmatize_method)
         text_sent_norm.append(sent_norm)
-    return [' '.join(w) for w in text_sent_norm]
+    return '. '.join(' '.join(sent) for sent in text_sent_norm)
