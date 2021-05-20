@@ -34,7 +34,7 @@ def prepro_review(input_text, max_rows=5):
 if st.button('Preview preprocessing'):
     prepro_review(text)
 
-model = st.selectbox('Select the summarization model', ('TextRank', 'LSA', 'other'))
+model = st.selectbox('Select the summarization model', ('TextRank', 'LexRank', 'Luhn', 'LSA', 'KLSum'))
 
 summary_size = st.slider('Select summary size with respect to the initial text (%): ',
                          min_value=1, max_value=99, step=1)
@@ -49,28 +49,3 @@ def run_summarizer(input_text):
 if st.button('Submit'):
     run_summarizer(text)
 
-# # if model == 'LSA':
-# #     _num_sentences = 5
-# #
-# #     col1 = st.beta_columns(1)
-# #     _num_sentences = col1[0].number_input("_num_sentences", value=_num_sentences)
-# # elif model == 'TF-idf':
-# #     _num_sentences = 5
-# #
-# #     col1 = st.beta_columns(1)
-# #     _num_sentences = col1[0].number_input("_num_sentences", value=_num_sentences)
-# def run_model(input_text, _num_sentences=5):
-
-# if model == 'LSA':
-#     output = summarize_with_lsa(str(input_text), _num_sentences)
-#     st.write('Summary')
-#     st.success(output)
-#
-# if model == 'TF-idf':
-#     output = summarize_with_tf_idf(str(input_text))
-#     st.write('Summary')
-#     st.success(output)
-
-
-# if st.button('Submit'):
-#     run_model(text)
