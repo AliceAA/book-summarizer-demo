@@ -5,3 +5,4 @@ wordninja~=2.0.0
 textblob~=0.15.3
 streamlit~=0.82.0
 sumy~=0.8.1
+pytest~=5.3.5
