@@ -1,5 +1,3 @@
-# test_with_unittest.py
-
 from unittest import TestCase
 
 from src.text_prepro import *
