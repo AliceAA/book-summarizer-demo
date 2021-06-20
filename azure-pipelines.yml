@@ -23,7 +23,7 @@ steps:
 
 - script: |
     python -m pip install flake8
-    flake8 . --ignore=W605 --max-line-length=117
+    flake8 . --ignore=W605,W504 --max-line-length=117
   displayName: 'Run lint tests.'
 
 - script: |
