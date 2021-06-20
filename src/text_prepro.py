@@ -113,7 +113,12 @@ def stem(words: list) -> list:
     return new_words
 
 
-def normalize_sent(sentence: str, lowercase: bool = True, stemming: bool = False, lemmatize_method: str = '') -> list:
+def normalize_sent(
+        sentence: str,
+        lowercase: bool = True,
+        stemming: bool = False,
+        lemmatize_method: str = ''
+) -> list:
     words = nltk.word_tokenize(sentence)
     words = remove_non_ascii(words)
     words = remove_punctuation(words)

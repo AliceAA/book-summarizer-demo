@@ -2,7 +2,7 @@ import streamlit as st
 
 from summarizer_factory import SummarizerFactory
 from summarizer_type import SummarizerType
-from text_prepro import *
+from text_prepro import text2sentences, normalize_text
 
 st.title('Extractive Text Summarization')
 
@@ -48,4 +48,3 @@ def run_summarizer(input_text):
 
 if st.button('Submit'):
     run_summarizer(text)
-
