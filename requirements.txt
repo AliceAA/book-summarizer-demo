@@ -5,3 +5,4 @@ wordninja~=2.0.0
 textblob~=0.15.3
 streamlit~=0.82.0
 sumy~=0.8.1
+https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-3.0.0/en_core_web_sm-3.0.0.tar.gz
